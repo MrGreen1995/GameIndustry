@@ -1,0 +1,89 @@
+﻿@page "/"
+
+<div class="row">
+    <div class="col text-center">
+        <h1>Welcome to our game industry Page</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col text-center">
+        <h2>Show all games in mock database</h2>        
+    </div>
+</div>
+
+<GameListTable Games="games">  
+</GameListTable>
+
+<IndividualGame Game="oneGameToShow" IsTable="false" DisplayButtons="true" SwitchGame="ShowNewGame"></IndividualGame>
+
+@code{
+
+    private List<Game> games { get; set; } = new List<Game>();
+
+    private Random rnd;
+
+    private Game oneGameToShow;
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        await Task.Delay(2000);
+
+        games = new List<Game>()
+        {
+            new Game()
+            {
+                Name = "Farming simulator 2019",
+                Genre = "Simulator",
+                ReleaseDate = new DateTime(2018, 11, 19) 
+            },
+            new Game()
+            {
+                Name = "The Witcher 3",
+                Genre = "Action?RPG",
+                ReleaseDate = new DateTime(2015, 5, 20) 
+            },
+            new Game()
+            {
+                Name = "Kill all humans",
+                Genre = "Action/Adventure",
+                ReleaseDate = new DateTime(2010, 1, 1) 
+            }
+        };
+
+        rnd = new Random(DateTime.Now.Millisecond);
+        oneGameToShow = games[rnd.Next(0, games.Count)];
+    }
+
+    public void ShowNewGame()
+    {
+        oneGameToShow = SwitchGame();
+    }
+
+    public Game SwitchGame()
+    {
+        Game tempGame;
+
+        if (games.Count >= 2)
+        {
+            var iterator = rnd.Next(0, games.Count);
+            tempGame = games[iterator];
+        }
+        else if (games.Count == 1)
+        {
+            tempGame = games[0];            
+        }
+        else
+        {
+            return new Game()
+            {
+                Name = "No items in array",
+                ReleaseDate = DateTime.Now
+            };
+        }
+
+        return tempGame;
+    }
+
+}
